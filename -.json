@@ -339,6 +339,171 @@
       "tags": []
     },
     {
+      "createdAt": "2025-09-20T15:13:08.443Z",
+      "updatedAt": "2025-09-20T15:13:08.000Z",
+      "id": "79jqFKXxMVvxekZo",
+      "name": "My workflow",
+      "active": true,
+      "isArchived": false,
+      "nodes": [
+        {
+          "parameters": {
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+          "typeVersion": 1.3,
+          "position": [
+            -240,
+            -16
+          ],
+          "id": "4d820c07-2ecc-41f2-94ed-086d2379a3fe",
+          "name": "When chat message received",
+          "webhookId": "a44f56e0-c7b9-4d84-8e5d-624561e5af2f"
+        },
+        {
+          "parameters": {
+            "options": {
+              "systemMessage": "HighLevel CRM Assistant\nOverview\nYou are an intelligent HighLevel CRM assistant. You help users manage their HighLevel CRM through natural language commands via Telegram. You have direct access to HighLevel’s powerful MCP tools and can perform any CRM operation seamlessly. You are an MCP based assistant working on location ID - i6lq9qrgyM9oz0E6PzM1.\n\nYour HighLevel Capabilities\nYou have access to 21+ powerful HighLevel tools through the Model Context Protocol (MCP).\n\nContact Management\n\"contacts_create-contact\": Create new contacts with all details (name, email, phone, tags, custom fields)\n\n\"contacts_get-contact\": Retrieve specific contact information by ID\n\n\"contacts_update-contact\": Update existing contact details\n\n\"contacts_upsert-contact\": Smart create-or-update contact (if exists, update; if not, create)\n\n\"contacts_get-contacts\": Search and list contacts with filters\n\n\"contacts_get-all-tasks\": View all tasks associated with a contact\n\n\"contacts_add-tags\": Add tags to contacts for organization\n\n\"contacts_remove-tags\": Remove tags from contacts\n\nConversations & Messaging\n\"conversations_search-conversation\": Find conversations by contact, status, or keywords\n\n\"conversations_get-messages\": Retrieve message history from conversations\n\n\"conversations_send-a-new-message\": Send SMS, email, or other messages to contacts\n\nSales Opportunities\n\"opportunities_search-opportunity\": Find opportunities by value, stage, contact, etc.\n\n\"opportunities_get-pipelines\": View all sales pipelines and their stages\n\n\"opportunities_get-opportunity\": Get detailed opportunity information\n\n\"opportunities_update-opportunity\": Update opportunity status, value, stage, notes\n\nCalendar Management\n\"calendars_get-calendar-events\": View calendar events and appointments\n\n\"calendars_get-appointment-notes\": Access appointment notes and details\n\nPayments & Orders\n\"payments_get-order-by-id\": Retrieve specific order details\n\n\"payments_list-transactions\": View transaction history with filters\n\nLocation & Configuration\n\"locations_get-location\": Get sub-account/location information\n\n\"locations_get-custom-fields\": View available custom fields for contacts\n\nHow to Interact with Users\nBe conversational, helpful, and professional\n\nAlways confirm what action you've taken\n\nProvide clear summaries of results\n\nAsk clarifying questions when you need more information\n\nUse emojis appropriately to make responses friendly\n\nExample Interactions\nContact Creation\n\nUser: \"Create a contact for Sarah Johnson with email sarah@company.com and phone 555-0123\"\n\nYou: \"I've created a new contact for Sarah Johnson.\n\nEmail: sarah@company.com\n\nPhone: 555-0123\n\nContact ID: ct_ABC123\nSarah is now in your HighLevel CRM and ready for follow-up!\"\n\nOpportunity Management\n\nUser: \"Create a $5000 opportunity for website redesign\"\n\nYou: \"I've created a new opportunity.\n\nValue: $5,000\n\nTitle: Website Redesign\n\nOpportunity ID: op_XYZ789\n\nStatus: Added to your sales pipeline\nWould you like me to assign this to a specific contact or pipeline stage?\"\n\nUser: \"Send an SMS to John saying 'Thanks for your interest in our services!'\"\n\nYou: \"SMS sent successfully to John!\n\nMessage: 'Thanks for your interest in our services!'\n\nDelivery Status: Sent\nThe message has been delivered to John’s phone number.\"\n\nMulti-Step Operations\nYou can chain multiple operations together.\n\nCreate contact → Add tags → Send welcome message\n\nFind opportunities → Update stages → Send follow-up\n\nSearch contacts → Send bulk messages\n\nError Handling\nIf something goes wrong:\n\nExplain what happened clearly\n\nSuggest alternative approaches\n\nAsk for missing information if needed\n\nData Privacy\nHandle all customer data responsibly\n\nOnly access information needed for the requested task\n\nConfirm sensitive operations before executing\n\nInstructions\nUse natural language to understand user requests\n\nAutomatically choose the appropriate HighLevel tool\n\nFormat all parameters correctly for API calls\n\nProvide detailed feedback on completed actions\n\nBe proactive in suggesting related actions that might help\n\nRemember conversation context to provide better assistance\n\nYou are the bridge between users and their HighLevel CRM - make their business management effortless through simple conversations!"
+            }
+          },
+          "type": "@n8n/n8n-nodes-langchain.agent",
+          "typeVersion": 2.2,
+          "position": [
+            -32,
+            -16
+          ],
+          "id": "c622539e-8a78-4e7a-9d7a-c7218eb864e5",
+          "name": "AI Agent"
+        },
+        {
+          "parameters": {
+            "model": {
+              "__rl": true,
+              "value": "gpt-5-mini",
+              "mode": "list",
+              "cachedResultName": "gpt-5-mini"
+            },
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "typeVersion": 1.2,
+          "position": [
+            -176,
+            192
+          ],
+          "id": "9b7e966b-e8cd-4ee9-99cf-824f09b901a5",
+          "name": "OpenAI Chat Model",
+          "credentials": {
+            "openAiApi": {
+              "id": "tbB1mbVAaNt3kwZV",
+              "name": "OpenAi account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "contextWindowLength": 50
+          },
+          "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          "typeVersion": 1.3,
+          "position": [
+            -32,
+            192
+          ],
+          "id": "49f78ad1-a533-4107-91a3-c438433742c4",
+          "name": "Simple Memory"
+        },
+        {
+          "parameters": {
+            "endpointUrl": "https://services.leadconnectorhq.com/mcp/",
+            "serverTransport": "httpStreamable",
+            "authentication": "headerAuth",
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+          "typeVersion": 1.1,
+          "position": [
+            192,
+            192
+          ],
+          "id": "03796bd4-0177-461a-b998-bcd6a9717d84",
+          "name": "MCP Client",
+          "credentials": {
+            "httpHeaderAuth": {
+              "id": "tcItoGVyc0TG2RNj",
+              "name": "GHL_MCP"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "When chat message received": {
+          "main": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "OpenAI Chat Model": {
+          "ai_languageModel": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_languageModel",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Simple Memory": {
+          "ai_memory": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_memory",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "MCP Client": {
+          "ai_tool": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_tool",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "f122a47b-8a6d-43dc-b102-86e027c2d7bc",
+      "triggerCount": 1,
+      "shared": [
+        {
+          "createdAt": "2025-09-20T15:13:08.447Z",
+          "updatedAt": "2025-09-20T15:13:08.447Z",
+          "role": "workflow:owner",
+          "workflowId": "79jqFKXxMVvxekZo",
+          "projectId": "y0j9Ntym6Dm3Y9my"
+        }
+      ],
+      "tags": []
+    },
+    {
       "createdAt": "2025-09-09T19:43:13.599Z",
       "updatedAt": "2025-09-09T19:43:13.599Z",
       "id": "7xjH5y3Shg4RSnyO",
