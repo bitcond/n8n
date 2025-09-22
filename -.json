@@ -340,7 +340,7 @@
     },
     {
       "createdAt": "2025-09-20T15:13:08.443Z",
-      "updatedAt": "2025-09-20T15:13:08.000Z",
+      "updatedAt": "2025-09-21T18:30:18.000Z",
       "id": "79jqFKXxMVvxekZo",
       "name": "My workflow",
       "active": true,
@@ -348,6 +348,8 @@
       "nodes": [
         {
           "parameters": {
+            "public": true,
+            "initialMessages": "Hi there! 👋\nMy name is TED AI. How can I assist you today?",
             "options": {}
           },
           "type": "@n8n/n8n-nodes-langchain.chatTrigger",
@@ -490,7 +492,7 @@
         "templateCredsSetupCompleted": true
       },
       "pinData": {},
-      "versionId": "f122a47b-8a6d-43dc-b102-86e027c2d7bc",
+      "versionId": "fef2837c-2a8e-4683-ba7a-b804edb6fa56",
       "triggerCount": 1,
       "shared": [
         {
