@@ -8970,6 +8970,955 @@
       "tags": []
     },
     {
+      "createdAt": "2025-10-02T13:55:49.195Z",
+      "updatedAt": "2025-10-02T18:38:28.000Z",
+      "id": "WLPZZCCZ9wkRoyzD",
+      "name": "Linkedin Instantly Scraper",
+      "active": false,
+      "isArchived": false,
+      "nodes": [
+        {
+          "parameters": {
+            "content": "## ❄️ Cold Outreach Machine 4.0\n## | [Created by Chase AI](https://www.skool.com/chase-ai)\n\n## How it Works\n### - Define your search parameters\n### - Generate Apollo URL for scraping\n### - Apollo data scraped via AmpleLeads\n### - CSV data extracted + uploaded to Sheets\n### - Custom messaging generated via OpenAI\n### - Leads + messaging uploaded to Instantly\n\n## APIs Needed\n### - [AmpleLeads](https://app.ampleleads.io/apollo-scraper)\n### - [Instantly](https://app.instantly.ai/app/settings/integrations)\n\n## Google Sheets Template\n### - [Sheets](https://docs.google.com/spreadsheets/d/1j46TWB12zm-jD3T14giZZjHGx-EzK2tZh4-ss_FHQC8/edit?usp=sharing) (Make your own copy)",
+            "height": 640,
+            "width": 512,
+            "color": 5
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            -544,
+            64
+          ],
+          "id": "63619312-c369-4e1e-a8a5-76664932f58a",
+          "name": "Sticky Note5"
+        },
+        {
+          "parameters": {
+            "promptType": "define",
+            "text": "=Job Title: {{ $json['Job Title'] }}\n\nCompany Size: {{ $json['Company Size'] }}\n\nKeywords: {{ $json.Keywords }}\n\nLocation: {{ $json.Location }}\n\n\n",
+            "messages": {
+              "messageValues": [
+                {
+                  "message": "=You are an expert Apollo.io search URL generator. Your task is to convert form data into a precise Apollo search URL.\n\n**CRITICAL INSTRUCTIONS:**\n\n1.  **Handle Multiple Values**: Fields like 'Job Title', 'Keywords', and 'Location' can contain multiple items separated by a comma. When you see a comma-separated list, you **MUST** create a separate URL parameter for **EACH** item in the list.\n    * _Example for Titles:_ `personTitles[]=Founder&personTitles[]=CEO`\n    * _Example for Locations:_ `personLocations[]=United%20States&personLocations[]=Austin`\n\n2.  **Supported Fields & URL Parameters**:\n    * **Location**: Maps to `personLocations[]`. Create one for each location in the list.\n    * **Job Title**: Maps to `personTitles[]`. Create one for each title in the list.\n    * **Company Size**: Maps to `organizationNumEmployeesRanges[]`. This is a single value and should use a hyphen (e.g., `1-10`).\n    * **Keywords**: Maps to `qOrganizationKeywordTags[]`. Create one for each keyword in the list.\n\n3.  **URL Encoding**: Ensure all values are properly URL-encoded (e.g., spaces become `%20`, and commas within a single location value like \"Austin, Texas\" become `%2C`).\n\n---\n\n**EXAMPLE:**\n\n**Input Data:**\nJob Title: Founder, CEO, President\nCompany Size: 1-10\nKeywords: Fintech, SaaS\nLocation: United States, Austin, Texas, Boston\n\n**Your Output (must be this exact format):**\nhttps://app.apollo.io/#/people?personTitles[]=Founder&personTitles[]=CEO&personTitles[]=President&organizationNumEmployeesRanges[]=1-10&qOrganizationKeywordTags[]=Fintech&qOrganizationKeywordTags[]=SaaS&personLocations[]=United%20States&personLocations[]=Austin%2C%20Texas&personLocations[]=Boston"
+                }
+              ]
+            },
+            "batching": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.chainLlm",
+          "typeVersion": 1.7,
+          "position": [
+            16,
+            -272
+          ],
+          "id": "bfac52e3-edc2-45d1-9310-2a394e91bb6a",
+          "name": "Apollo URL Generator",
+          "disabled": true
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.ampleleads.io/v1/apollo/scrape",
+            "sendQuery": true,
+            "queryParameters": {
+              "parameters": [
+                {
+                  "name": "api_key",
+                  "value": "FRAnPzmXZ5JNCiHTngcZ1Q92Ofapn4ah"
+                }
+              ]
+            },
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "accept",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={\n  \"apollo_url\": \"https://app.apollo.io/#/people?page=1&personTitles[]=foster&sortAscending=false&sortByField=%5Bnone%5D&personLocations[]=Greater%20Houston%20Area\",\n  \"fetch_count\": 100\n}",
+            "options": {}
+          },
+          "id": "6e45f511-0883-46c5-8ea3-b9234ad67b66",
+          "name": "Scrape Leads",
+          "type": "n8n-nodes-base.httpRequest",
+          "position": [
+            560,
+            128
+          ],
+          "typeVersion": 4.2
+        },
+        {
+          "parameters": {
+            "url": "=https://api.ampleleads.io/v1/apollo/status/{{ $json.data.run_id }}",
+            "sendQuery": true,
+            "queryParameters": {
+              "parameters": [
+                {
+                  "name": "api_key",
+                  "value": "FRAnPzmXZ5JNCiHTngcZ1Q92Ofapn4ah"
+                }
+              ]
+            },
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "accept",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            768,
+            128
+          ],
+          "id": "ad1675ad-5592-4f60-9783-e0754f3307ce",
+          "name": "Get Run Status"
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "9c4063c3-48aa-45f4-89c3-57e2f4d1eb28",
+                  "leftValue": "={{ $json.data.status }}",
+                  "rightValue": "completed",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.2,
+          "position": [
+            944,
+            128
+          ],
+          "id": "4a501313-c0ee-4512-afe0-fcb0375ef574",
+          "name": "If"
+        },
+        {
+          "parameters": {
+            "amount": 30
+          },
+          "type": "n8n-nodes-base.wait",
+          "typeVersion": 1.1,
+          "position": [
+            1152,
+            144
+          ],
+          "id": "e7eccc7e-ce29-4b83-aaac-55e241498210",
+          "name": "Wait",
+          "webhookId": "a7e5f913-f4fb-4e2e-9cbd-3dad6c177b14",
+          "executeOnce": false,
+          "retryOnFail": false
+        },
+        {
+          "parameters": {
+            "options": {}
+          },
+          "type": "n8n-nodes-base.extractFromFile",
+          "typeVersion": 1,
+          "position": [
+            256,
+            416
+          ],
+          "id": "e45c3402-3f2a-4340-8606-19293de1207d",
+          "name": "Extract from File"
+        },
+        {
+          "parameters": {
+            "url": "={{ $json.data.output_csv_url }}",
+            "options": {
+              "response": {
+                "response": {
+                  "responseFormat": "file"
+                }
+              }
+            }
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            96,
+            416
+          ],
+          "id": "eec36165-81cf-4797-a7ea-1b989f66fa84",
+          "name": "Get CSV"
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "1NcKSXmtZZbrvEj1ys7kHR1fF-WFxjLWRAhsybViHUY4",
+              "mode": "list",
+              "cachedResultName": "Copy of SCRAPER TEMPLATE 4.0",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NcKSXmtZZbrvEj1ys7kHR1fF-WFxjLWRAhsybViHUY4/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "gid=0",
+              "mode": "list",
+              "cachedResultName": "Sheet1",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XhDslx1PaQYMDhqK9WJKNAUbj7WdBHy-dG5EqQppYJc/edit#gid=0"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "First Name": "={{ $json.first_name }}",
+                "Last Name": "={{ $json.last_name }}",
+                "Company Name": "={{ $json.company_name }}",
+                "Company Website": "={{ $json.company_website }}",
+                "Email": "={{ $json.email }}",
+                "Full Name": "={{ $json.full_name }}",
+                "LinkedIn": "={{ $json.linkedin }}",
+                "Title": "={{ $json.title }}",
+                "Industry": "={{ $json.industry }}",
+                "Headline": "={{ $json.headline }}",
+                "City": "={{ $json.city }}",
+                "State": "={{ $json.state }}",
+                "Country": "={{ $json.country }}",
+                "Employees Count": "={{ $json.employees_count }}",
+                "Keywords": "={{ $json.keywords }}",
+                "Company SEO Description": "={{ $json.company_seo_description }}",
+                "Company Short Description": "={{ $json.company_short_description }}",
+                "Company Linkedin": "={{ $json.company_linkedin }}"
+              },
+              "matchingColumns": [],
+              "schema": [
+                {
+                  "id": "First Name",
+                  "displayName": "First Name",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Last Name",
+                  "displayName": "Last Name",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Company Name",
+                  "displayName": "Company Name",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Company Website",
+                  "displayName": "Company Website",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Email",
+                  "displayName": "Email",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Full Name",
+                  "displayName": "Full Name",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LinkedIn",
+                  "displayName": "LinkedIn",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Title",
+                  "displayName": "Title",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Industry",
+                  "displayName": "Industry",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline",
+                  "displayName": "Headline",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "City",
+                  "displayName": "City",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "State",
+                  "displayName": "State",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Country",
+                  "displayName": "Country",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Employees Count",
+                  "displayName": "Employees Count",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Keywords",
+                  "displayName": "Keywords",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Company SEO Description",
+                  "displayName": "Company SEO Description",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Company Short Description",
+                  "displayName": "Company Short Description",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Company Linkedin",
+                  "displayName": "Company Linkedin",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                }
+              ],
+              "attemptToConvertTypes": false,
+              "convertFieldsToString": false
+            },
+            "options": {
+              "useAppend": true
+            }
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.7,
+          "position": [
+            496,
+            416
+          ],
+          "id": "1eee4cbd-d58c-495a-a7de-9fc26262b9be",
+          "name": "Upload to Sheets",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "CwsJkZFBGr2wTDhZ",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "jsonSchemaExample": "{\n\t\"normalName\": \"Engler Distributing\",\n\t\"icebreaker\": \"Love what you're doing with Effective Sign Works. Bob's philosophy of 'only as good as your last job' really resonates. Wanted to reach out.\"\n}"
+          },
+          "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+          "typeVersion": 1.3,
+          "position": [
+            1024,
+            560
+          ],
+          "id": "b2ee25f8-e7ed-47c6-96bf-0ab120df5e7f",
+          "name": "Structured Output Parser2"
+        },
+        {
+          "parameters": {
+            "promptType": "define",
+            "text": "=Company name: {{ $json['Company Name'] }}\n\nCompany background: {{ $json['Company Short Description'] }}",
+            "hasOutputParser": true,
+            "messages": {
+              "messageValues": [
+                {
+                  "message": "=You are a company name normalizer and icebreaker generator for cold outreach emails.\n\nTASK 1: NORMALIZE COMPANY NAME\nTake the official company name and output the casual conversational version:\n- Remove LLC, Inc., Corp., Ltd., etc.\n- Remove colons, slashes, taglines, and descriptive phrases\n- Fix ALL CAPS to proper case\n- Keep ampersands (&) and \"Co.\" when they're part of the core name\n- Output how the company name would be spoken in conversation\n\nTASK 2: CREATE ICEBREAKER\nCreate one natural sentence: \"Love what you're doing with [company], especially [unique thing we noticed]. Wanted to reach out.\"\n\nREQUIREMENTS:\n- Pick the most SURPRISING/INTERESTING detail that makes them unique\n- Keep the \"especially\" part to MAXIMUM 10 words\n- PARAPHRASE in simple, natural language\n- USE VARIED SENTENCE STRUCTURES - mix up your phrasing naturally\n- Focus on what made you think \"oh, that's clever/different\"\n- Write like you're genuinely commenting on something that caught your eye\n- ALWAYS end with \"Wanted to reach out.\"\n- Avoid overused words like \"seamless,\" \"truly,\" \"smart,\" \"really,\" \"the way you\"\n- Avoid generic observations that could apply to any company\n\nSTRUCTURE VARIETY EXAMPLES:\n- \"especially [person's] [quote/philosophy]\"\n- \"especially the [specific approach/strategy]\"  \n- \"especially [unique positioning/focus]\"\n- \"especially being [achievement/status]\"\n- \"especially that [surprising detail]\"\n- \"especially [interesting partnership/method]\"\n\nGOOD EXAMPLES (short and specific):\n- \"Love what you're doing with TAG Digital Marketing, especially being one of Google's first platinum agencies. Wanted to reach out.\"\n- \"Love what you're doing with Backroom, especially burning down the old agency model. Wanted to reach out.\"\n- \"Love what you're doing with Glass, especially using blockchain to navigate complex alcohol rules. Wanted to reach out.\"\n- \"Love what you're doing with Cowsultants, especially the Everything for the Cow approach. Wanted to reach out.\"\n\nBAD EXAMPLES:\n- \"especially the way you combine precise craftsmanship with total project management to make signs that actually drive business\" (TOO LONG - 18 words)\n- \"especially the way you focus on building lasting client relationships\" (GENERIC)\n- \"especially creators who truly fit their vibe\" (USES BANNED WORD \"truly\")\n\nTONE: Short, punchy, naturally varied - like you noticed one specific thing that stood out.\n\nGenerate the complete icebreaker sentence."
+                }
+              ]
+            },
+            "batching": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.chainLlm",
+          "typeVersion": 1.7,
+          "position": [
+            768,
+            416
+          ],
+          "id": "6eb4e22f-82b5-42ae-ab93-805039b101ad",
+          "name": "Custom Messaging"
+        },
+        {
+          "parameters": {
+            "model": {
+              "__rl": true,
+              "value": "gpt-5-mini",
+              "mode": "list",
+              "cachedResultName": "gpt-5-mini"
+            },
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "typeVersion": 1.2,
+          "position": [
+            656,
+            592
+          ],
+          "id": "f8d31187-4c7b-4341-b9e3-055b5bbb3c4a",
+          "name": "OpenAI",
+          "credentials": {
+            "openAiApi": {
+              "id": "tbB1mbVAaNt3kwZV",
+              "name": "OpenAi account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "content": "",
+            "height": 768,
+            "width": 1392,
+            "color": 7
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "id": "a5e6cc86-c316-42b8-b69b-0d1578cedbef",
+          "name": "Sticky Note"
+        },
+        {
+          "parameters": {
+            "content": "## Scrape",
+            "height": 288,
+            "width": 672,
+            "color": 3
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            48,
+            48
+          ],
+          "id": "6d46a171-8385-4abb-9aab-407b99f4030f",
+          "name": "Sticky Note1"
+        },
+        {
+          "parameters": {
+            "content": "## Get Results",
+            "height": 288,
+            "width": 608,
+            "color": 4
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            768,
+            32
+          ],
+          "id": "5f2aeb65-55a4-4dd8-b63c-34e3d8d3ffb2",
+          "name": "Sticky Note2"
+        },
+        {
+          "parameters": {
+            "content": "## Extract to Sheets",
+            "height": 368,
+            "width": 672,
+            "color": 5
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            48,
+            336
+          ],
+          "id": "a012cfc9-9557-45ce-b2ac-03fdbbb41b30",
+          "name": "Sticky Note3"
+        },
+        {
+          "parameters": {
+            "content": "## Custom Messaging + Instantly Upload",
+            "height": 368,
+            "width": 608,
+            "color": 6
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            720,
+            336
+          ],
+          "id": "c8e9f009-7eb2-4a71-9639-e8fa637e79af",
+          "name": "Sticky Note6"
+        },
+        {
+          "parameters": {
+            "formTitle": "Apollo + Apify Lead Generation",
+            "formDescription": "Describe the types of leads you are trying to find.",
+            "formFields": {
+              "values": [
+                {
+                  "fieldLabel": "Job Title",
+                  "placeholder": "Founder, Engineer, Owner"
+                },
+                {
+                  "fieldLabel": "Company Size",
+                  "fieldType": "dropdown",
+                  "fieldOptions": {
+                    "values": [
+                      {
+                        "option": "1-10"
+                      },
+                      {
+                        "option": "11-50"
+                      },
+                      {
+                        "option": "51-200"
+                      },
+                      {
+                        "option": "201-1000"
+                      },
+                      {
+                        "option": "10001-5000"
+                      },
+                      {
+                        "option": "5001-10000"
+                      },
+                      {
+                        "option": "10001-100000"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "fieldLabel": "Keywords",
+                  "placeholder": "Keywords relevant to the contact or company"
+                },
+                {
+                  "fieldLabel": "Location",
+                  "placeholder": "United States, California, London"
+                },
+                {
+                  "fieldLabel": "Instantly Campaign ID",
+                  "placeholder": "12345"
+                },
+                {
+                  "fieldLabel": "Amount of Leads to Generate",
+                  "placeholder": "Must be between 100 and 50000",
+                  "requiredField": true
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.formTrigger",
+          "typeVersion": 2.2,
+          "position": [
+            -176,
+            -256
+          ],
+          "id": "42a3def0-5e27-4666-9e90-7f632971f40b",
+          "name": "On form submission",
+          "webhookId": "ca164d2c-6b5b-4b05-bd68-f74158c4e405",
+          "disabled": true
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.instantly.ai/api/v2/leads",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer Y2UyZDFkYTctMTZhNi00NWI0LTgyYTQtMDQ2MWFhMDc5NzBjOmVGTEJaakxFUG5reQ=="
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={\n  \"campaign\": \"691bdfd6-4532-4a9d-8c76-3534334f88ea\",\n  \"email\": \"{{ $('Extract from File').item.json.email ? $('Extract from File').item.json.email : 'test@example.com' }}\",\n  \"last_name\": \"{{ $('Extract from File').item.json.last_name }}\",\n  \"first_name\": \"{{ $('Extract from File').item.json.first_name }}\",\n  \"company_name\": \"{{ $('Extract from File').item.json.company_name }}\",\n  \"custom_variables\": {\n    \"icebreaker\": \"{{ $json.output.icebreaker }}\",\n    \"customCompanyName\": \"{{ $json.output.normalName }}\"\n  }\n}",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            1104,
+            416
+          ],
+          "id": "e6e4b21a-16a5-4949-b7d8-6d4369821c1f",
+          "name": "Add Lead to Instantly"
+        },
+        {
+          "parameters": {
+            "content": "@[youtube](A84Jb-qf5AY)",
+            "height": 560,
+            "width": 976
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "typeVersion": 1,
+          "position": [
+            1504,
+            128
+          ],
+          "id": "964e7429-9ffe-4fb3-990c-6fbe4e15ec47",
+          "name": "Sticky Note4"
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.ampleleads.io/v1/apollo/scrape",
+            "sendQuery": true,
+            "queryParameters": {
+              "parameters": [
+                {
+                  "name": "api_key",
+                  "value": "FRAnPzmXZ5JNCiHTngcZ1Q92Ofapn4ah"
+                }
+              ]
+            },
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "accept",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={\n  \"apollo_url\": \"{{ $json.text }}\",\n  \"fetch_count\": {{ $('On form submission').item.json['Amount of Leads to Generate'] }}\n}",
+            "options": {}
+          },
+          "id": "63743ffb-68be-426b-b2ff-1b99301a6e2b",
+          "name": "Scrape Leads1",
+          "type": "n8n-nodes-base.httpRequest",
+          "position": [
+            336,
+            -272
+          ],
+          "typeVersion": 4.2,
+          "disabled": true
+        },
+        {
+          "parameters": {
+            "content": "trying to scrape leads manually.. took out first three steps.. copied third scrape leads, going to try to do manaully with apollo URL"
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "position": [
+            832,
+            -288
+          ],
+          "typeVersion": 1,
+          "id": "4a95ea1f-04d5-4378-94ad-9154fc2ab9cc",
+          "name": "Sticky Note7"
+        },
+        {
+          "parameters": {},
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            368,
+            128
+          ],
+          "id": "b667ecba-828f-4278-bd93-467a5cb1af81",
+          "name": "When clicking ‘Execute workflow’"
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.instantly.ai/api/v2/leads",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer Y2UyZDFkYTctMTZhNi00NWI0LTgyYTQtMDQ2MWFhMDc5NzBjOmVGTEJaakxFUG5reQ=="
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={\n  \"campaign\": \"{{ $('On form submission').item.json['Instantly Campaign ID'] }}\",\n  \"email\": \"{{ $('Extract from File').item.json.email ? $('Extract from File').item.json.email : 'test@example.com' }}\",\n  \"last_name\": \"{{ $('Extract from File').item.json.last_name }}\",\n  \"first_name\": \"{{ $('Extract from File').item.json.first_name }}\",\n  \"company_name\": \"{{ $('Extract from File').item.json.company_name }}\",\n  \"custom_variables\": {\n    \"icebreaker\": \"{{ $json.output.icebreaker }}\",\n    \"customCompanyName\": \"{{ $json.output.normalName }}\"\n  }\n}",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            1280,
+            -224
+          ],
+          "id": "edd2872b-9f0a-437d-8021-bc9094d010cb",
+          "name": "Add Lead to Instantly1"
+        },
+        {
+          "parameters": {
+            "content": "replaced campaign id in the flow below"
+          },
+          "type": "n8n-nodes-base.stickyNote",
+          "position": [
+            1472,
+            -256
+          ],
+          "typeVersion": 1,
+          "id": "d1e81a3a-c2f5-4854-a8d3-1bc33df3deb1",
+          "name": "Sticky Note8"
+        }
+      ],
+      "connections": {
+        "Apollo URL Generator": {
+          "main": [
+            []
+          ]
+        },
+        "Scrape Leads": {
+          "main": [
+            [
+              {
+                "node": "Get Run Status",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Get Run Status": {
+          "main": [
+            [
+              {
+                "node": "If",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "If": {
+          "main": [
+            [
+              {
+                "node": "Get CSV",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Wait",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Wait": {
+          "main": [
+            [
+              {
+                "node": "Get Run Status",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Get CSV": {
+          "main": [
+            [
+              {
+                "node": "Extract from File",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extract from File": {
+          "main": [
+            [
+              {
+                "node": "Upload to Sheets",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Upload to Sheets": {
+          "main": [
+            [
+              {
+                "node": "Custom Messaging",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Structured Output Parser2": {
+          "ai_outputParser": [
+            [
+              {
+                "node": "Custom Messaging",
+                "type": "ai_outputParser",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Custom Messaging": {
+          "main": [
+            [
+              {
+                "node": "Add Lead to Instantly",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "OpenAI": {
+          "ai_languageModel": [
+            [
+              {
+                "node": "Custom Messaging",
+                "type": "ai_languageModel",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "On form submission": {
+          "main": [
+            []
+          ]
+        },
+        "When clicking ‘Execute workflow’": {
+          "main": [
+            [
+              {
+                "node": "Scrape Leads",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "f8132d60-981d-4197-9ecd-cd327c9a6e71",
+      "triggerCount": 0,
+      "shared": [
+        {
+          "createdAt": "2025-10-02T13:55:49.198Z",
+          "updatedAt": "2025-10-02T13:55:49.198Z",
+          "role": "workflow:owner",
+          "workflowId": "WLPZZCCZ9wkRoyzD",
+          "projectId": "y0j9Ntym6Dm3Y9my"
+        }
+      ],
+      "tags": []
+    },
+    {
       "createdAt": "2025-09-09T17:37:04.861Z",
       "updatedAt": "2025-09-09T17:37:04.861Z",
       "id": "YKIWovHuRnxtuddS",
